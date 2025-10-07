@@ -1,39 +1,28 @@
 (function() {
-  document.getElementById("ex2_text").addEventListener("input", number);
-  function number() {
-    const correct = "Numer telefonu nie jest poprawny"
-    var number = document.getElementById("ex2_text");
-    const log = document.getElementById('ex2_content');
-    const log3 = document.getElementById('ex3_content');
-    const log4 = document.getElementById('ex4_content');
-    const log5 = document.getElementById('ex5_content');
+  const dragEl = document.getElementById('ex3_element');
+  const containers = [document.getElementById('ex3_one'), document.getElementById('ex3_two')];
 
-    if (number.value.match(/[\W]/)) {
-      log5.textContent = "Numer nie może zawierać znaków specjalnych 🤓👆";
-    }
-    else {
-      log5.textContent = " ";
-    }
+  dragEl.addEventListener('dragstart', function(e) {
+    e.dataTransfer.setData('text/plain', e.target.id);
+    e.dataTransfer.effectAllowed = 'move';
+  });
 
-    if (number.value.match(/[a-zA-Z]/)) {
-      log4.textContent = "Numer nie może zawierać liter >:(";
-    }
-    else {
-      log4.textContent = " ";
-    }
+  containers.forEach(container => {
+    container.addEventListener('dragover', function(e) {
+      e.preventDefault(); // pozwala na drop
+      container.classList.add('drag-over');
+    });
+    container.addEventListener('dragleave', function() {
+      container.classList.remove('drag-over');
+    });
 
-    if (number.value.length != 9) {
-      log3.textContent = "Długość numeru musi być równa 9 😡😡😡";
-    }
-    else {
-      log3.textContent = " ";
-    }
+    container.addEventListener('drop', function(e) {
+      e.preventDefault();
+      container.classList.remove('drag-over');
+      const id = e.dataTransfer.getData('text/plain');
+      const el = document.getElementById(id);
+      if (el) container.appendChild(el); // element może być przenoszony do dowolnego kontenera
+    });
+  });
 
-    if (number.value.match(/^[0-9]+$/) && number.value.length == 9) {
-      log.textContent = "Numer telefonu jest poprawny ";
-    }
-    else {
-      log.textContent = " ";
-    }
-  }
 })();
